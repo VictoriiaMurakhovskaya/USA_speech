@@ -10,9 +10,10 @@ import numpy as np
 from itertools import chain
 import matplotlib.pyplot as plt
 
+import sys
+
 
 speech_dir = "us_presidential_speeches/"
-terms = ["capitalism", "socialism", 'america']
 
 
 def president_terms(corpus, vocab=None):
@@ -29,7 +30,29 @@ def president_terms(corpus, vocab=None):
     return pipe['tfid'].idf_
 
 
-if __name__ == '__main__':
+def get_data():
+    if sys.argv[1] != '--terms':
+        print('Incorrect arguments')
+        sys.exit(1)
+
+    try:
+        i_title = sys.argv.index('--title')
+        terms = sys.argv[2:i_title]
+        title = sys.argv[i_title + 1]
+    except:
+        print('No title is given')
+        terms = sys.argv[2:]
+        title = ""
+
+    return terms, title
+
+
+def main():
+    terms, title = get_data()
+    get_score(terms, title)
+
+
+def get_score(terms, title):
     # чтение набора JSON файлов в словарь
     # дата - ключ, текст речи - значение
     txts = {}
@@ -78,7 +101,11 @@ if __name__ == '__main__':
     df_years.plot.line(x='Year', y=terms)
 
     # отображаем фигуру matplotlib
+    plt.title(title)
     plt.show()
 
+
+if __name__ == '__main__':
+    main()
 
 
