@@ -43,21 +43,30 @@ def get_data():
     values = {}
     args = ['--terms', '--path', '--title', '--output']
 
+    # проверка значений, подстановка умолчаний
+    if '--terms' not in sys.argv:
+        print('No terms defined')
+        sys.exit(1)
+
     # получение позиций названий аргументов типа --title
     for item in args:
         if item in sys.argv:
             pos.update({item[2:]: sys.argv.index(item)})
     pos = OrderedDict({k: v for k, v in sorted(pos.items(), key=lambda item: item[1])})
 
-    # получение значений аргументов с использованием полученных позиций
-    for i in range(len(list(pos.keys())) - 1):
-        values.update({list(pos.keys())[i]: sys.argv[pos[list(pos.keys())[i]] + 1: pos[list(pos.keys())[i + 1]]]})
-    values.update({list(pos.keys())[i + 1]: sys.argv[pos[list(pos.keys())[i + 1]] + 1:]})
+    if len(pos.keys()) == 1:
+        if list(pos.keys())[0] != 'terms':
+            print('No terms defined')
+            sys.exit(1)
+        else:
+            values.update({'terms': sys.argv[2:]})
+    else:
+        # получение значений аргументов с использованием полученных позиций
+        for i in range(len(list(pos.keys())) - 1):
+            values.update({list(pos.keys())[i]: sys.argv[pos[list(pos.keys())[i]] + 1: pos[list(pos.keys())[i + 1]]]})
+        values.update({list(pos.keys())[i + 1]: sys.argv[pos[list(pos.keys())[i + 1]] + 1:]})
 
-    # проверка значений, подстановка умолчаний
-    if 'terms' not in values.keys():
-        print('No terms defined')
-        sys.exit(1)
+
 
     if 'path' not in values.keys():
         values.update({'path': default_in_path})
