@@ -66,8 +66,6 @@ def get_data():
             values.update({list(pos.keys())[i]: sys.argv[pos[list(pos.keys())[i]] + 1: pos[list(pos.keys())[i + 1]]]})
         values.update({list(pos.keys())[i + 1]: sys.argv[pos[list(pos.keys())[i + 1]] + 1:]})
 
-
-
     if 'path' not in values.keys():
         values.update({'path': default_in_path})
     else:
